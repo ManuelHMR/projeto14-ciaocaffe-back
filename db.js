@@ -3,7 +3,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+let db;
 const mongoClient = new MongoClient(process.env.MONGO_URI);
-const db = mongoClient.db(process.env.DB);
+try{
+    await mongoClient.connect();
+    db = mongoClient.db(process.env.DB);
+} catch (err) {
+    console.log("Erro ao conectar com o banco de dados");
+}
+
 
 export default db;
