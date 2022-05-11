@@ -12,5 +12,4 @@ try{
     console.log("Erro ao conectar com o banco de dados");
 }
 
-
 export default db;
