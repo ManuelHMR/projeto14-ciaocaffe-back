@@ -6,7 +6,14 @@ const sessionsCollection = db.collection("sessionsCollection");
 
 export async function signIn (req, res) {
     try{
-
+        const token = v4();
+        const {user} = res.locals;
+        const data = {
+            userId: user._id,
+            token
+        }
+        await sessionsCollection.insertOne(data)
+        res.send(token)
     } catch (err){
         res.send(err)
     };
