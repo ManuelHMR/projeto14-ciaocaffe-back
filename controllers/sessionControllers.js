@@ -1,5 +1,6 @@
 import joi from 'joi'; 
 import bcrypt from 'bcrypt';
+import {v4} from "uuid";
 
 import db from "./../db.js";
 const sessionsCollection = db.collection("sessionsCollection");
@@ -7,12 +8,12 @@ const sessionsCollection = db.collection("sessionsCollection");
 export async function signIn (req, res) {
     try{
         const token = v4();
-        const {user} = res.locals;
+        const user = res.locals.user;
         const data = {
             userId: user._id,
             token
         }
-        await sessionsCollection.insertOne(data)
+        await sessionsCollection.insertOne(data);
         res.send(token)
     } catch (err){
         res.send(err)
