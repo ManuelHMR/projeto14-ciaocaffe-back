@@ -6,6 +6,7 @@ dotenv.config();
 
 import sessionRouter from "./routers/sessionRouter.js"
 import productsRouter from "./routers/productsRouter.js"
+import salesRouter from "./routers/salesRouter.js";
 
 const app = express();
 let port = process.env.PORT || 5000;
@@ -23,7 +24,7 @@ app.use(function(req, res, next) {
 
 app.use(sessionRouter);
 app.use(productsRouter);
-//app.use(xxxRouter)
+app.use(salesRouter);
 
 app.listen(port, () => {
     console.log(`Servidor ligado na porta ${port}`)
