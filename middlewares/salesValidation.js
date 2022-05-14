@@ -5,7 +5,7 @@ const usersCollection = db.collection("usersCollection");
 const sessionsCollection = db.collection("sessionsCollection");
 
 export async function salesValidation (req, res, next){
-    const {adress, cart, total} = req.body;
+    const {cep, street, number, neighbourhood, city, state, cart, total} = req.body;
     const token = req.headers.token.replace(/"/g,"").trim();
     try{
         const session = await sessionsCollection.findOne({token});
@@ -14,7 +14,7 @@ export async function salesValidation (req, res, next){
             return res.status(404);
         }
         delete user.password;
-        const sale = {adress, cart, total, user};
+        const sale = {cep, street, number, neighbourhood, city, state, cart, total, user};
         res.locals.sale = sale;
     }catch (err){
         res.send(err);
