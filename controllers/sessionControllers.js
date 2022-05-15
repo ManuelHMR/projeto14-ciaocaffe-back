@@ -50,7 +50,7 @@ export async function signUp (req, res) {
 };
 
 export async function signOut(req, res){
-    const {token} = req.body;
+    const {token} = req.headers;
     try{
         await sessionsCollection.deleteOne({token})
         res.send("Sessão encerrada!")
