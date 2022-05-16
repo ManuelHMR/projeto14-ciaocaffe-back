@@ -25,7 +25,7 @@ export async function getProductId (req, res) {
     }
 }
 
-export async function changeStorage (req, res) {
+export function changeStorage (req, res) {
     const { cart } = req.body;
     cart.forEach(async (item) => {
         const {quantity, name} = item;
@@ -33,6 +33,7 @@ export async function changeStorage (req, res) {
             const product = await productsCollection.findOne({name});
             const {stored} = product;
             const newQuantity = stored - quantity;
+            if(newQuantity <= 0) return res.send('Produto indisponível no estoque');
 
             await productsCollection.updateOne({name}, {$set: {stored: newQuantity}});
             res.sendStatus(200);
