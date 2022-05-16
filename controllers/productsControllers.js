@@ -32,7 +32,7 @@ export async function changeStorage (req, res) {
         const temNoCarrinho = cart.filter((item) => {
             return semEstoque.name === item.name;
         })
-        if(!temNoCarrinho){
+        if(temNoCarrinho.length === 0){
             cart.forEach(async (item) => {
                 const {quantity, name} = item;
                 try {
@@ -48,7 +48,7 @@ export async function changeStorage (req, res) {
                 }
             })
         } else {
-            res.send('Itens do carrinho não disponíveis');
+            res.send('Produto indisponível no estoque');
         }
     } catch(e) {
         res.send('erro');
