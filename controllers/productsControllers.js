@@ -33,7 +33,7 @@ export function changeStorage (req, res) {
             const product = await productsCollection.findOne({name});
             const {stored} = product;
             const newQuantity = stored - quantity;
-            if(newQuantity <= 0) return res.send('Produto indisponível no estoque');
+            if(newQuantity < 0) return res.send('Produto indisponível no estoque');
             await productsCollection.updateOne({name}, {$set: {stored: newQuantity}});
             console.log(newQuantity)
             res.sendStatus(200);
