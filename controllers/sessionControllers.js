@@ -52,10 +52,11 @@ export async function signUp (req, res) {
 export async function signOut(req, res){
     const {token} = req.headers;
     try{
-        const session = await sessionsCollection.deleteOne({token});
+        const session = await sessionsCollection.findOne({token});
         if(!session){
             return res.send("Não foi possível localizar a sessão!");
         }
+        await sessionsCollection.deleteOne({token});
         res.send("Sessão encerrada!");
     }catch(err){
         res.send(err)

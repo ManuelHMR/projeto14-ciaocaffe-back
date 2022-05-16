@@ -7,7 +7,7 @@ export async function signInValidation (req, res, next){
     const {email, password} = req.body;
     const user = await usersCollection.findOne({email});     
     if(!user){
-        return res.status(404);
+        return res.status(404).send("Email inválido!");
     }
     if(bcrypt.compareSync(password, user.password)){
         res.locals.user = user;
