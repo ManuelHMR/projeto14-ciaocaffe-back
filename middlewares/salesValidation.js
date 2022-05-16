@@ -12,9 +12,8 @@ export async function salesValidation (req, res, next){
     try{
         const token = req.headers.token.replace(/"/g,"").trim();
         const data = jwt.verify(token, secretKey);
-
         const user = await usersCollection.findOne({_id: new ObjectId(data.userId)});    
-        if(!user || !session){
+        if(!user){
             return res.status(404);
         }
         delete user.password;
