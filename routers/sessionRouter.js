@@ -12,4 +12,3 @@ sessionRouter.delete("/signout", signOut);
 
 
 export default sessionRouter;
-
