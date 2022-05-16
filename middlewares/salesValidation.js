@@ -1,8 +1,10 @@
 import { ObjectId } from "mongodb";
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import db from "./../db.js";
 const usersCollection = db.collection("usersCollection");
+dotenv.config();
 
 export async function salesValidation (req, res, next){
     const {cep, street, number, neighbourhood, city, state, cart, total} = req.body;

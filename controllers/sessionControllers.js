@@ -1,9 +1,11 @@
 import joi from 'joi'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import db from "./../db.js";
 const sessionsCollection = db.collection("sessionsCollection");
+dotenv.config();
 
 export async function signIn (req, res) {
     try{
