@@ -1,19 +1,20 @@
 import joi from 'joi'; 
 import bcrypt from 'bcrypt';
-import {v4} from "uuid";
+import jwt from 'jsonwebtoken';
 
 import db from "./../db.js";
 const sessionsCollection = db.collection("sessionsCollection");
 
 export async function signIn (req, res) {
     try{
-        const token = v4();
         const user = res.locals.user;
-        const data = {
-            userId: user._id,
-            token
-        }
-        await sessionsCollection.insertOne(data);
+        const data = {  userId: user._id }
+
+        const secretKey = process.env.JWT_SECRET;
+        const config = { expiresIn: 60*60*24*7 }
+        const token = jwt.sign(data, secretKey, config);
+
+        await sessionsCollection.insertOne(token);
         res.send(token)
     } catch (err){
         res.send(err)
@@ -51,7 +52,10 @@ export async function signUp (req, res) {
 
 export async function signOut(req, res){
     const {token} = req.headers;
+    /*const secretKey = process.env.JWT_SECRET;*/
     try{
+        /*jwt.verify(token, secretKey);*/
+
         const session = await sessionsCollection.findOne({token});
         if(!session){
             return res.send("Não foi possível localizar a sessão!");

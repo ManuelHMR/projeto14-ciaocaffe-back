@@ -1,15 +1,17 @@
 import { ObjectId } from "mongodb";
+import jwt from 'jsonwebtoken';
 
 import db from "./../db.js";
 const usersCollection = db.collection("usersCollection");
-const sessionsCollection = db.collection("sessionsCollection");
 
 export async function salesValidation (req, res, next){
     const {cep, street, number, neighbourhood, city, state, cart, total} = req.body;
-    const token = req.headers.token.replace(/"/g,"").trim();
+    const secretKey = process.env.JWT_SECRET;
     try{
-        const session = await sessionsCollection.findOne({token});
-        const user = await usersCollection.findOne({_id: new ObjectId(session.userId)});    
+        const token = req.headers.token.replace(/"/g,"").trim();
+        const data = jwt.verify(token, secretKey);
+
+        const user = await usersCollection.findOne({_id: new ObjectId(data.userId)});    
         if(!user || !session){
             return res.status(404);
         }
