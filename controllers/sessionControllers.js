@@ -55,10 +55,7 @@ export async function signUp (req, res) {
 
 export async function signOut(req, res){
     const {token} = req.headers;
-    /*const secretKey = process.env.JWT_SECRET;*/
     try{
-        /*jwt.verify(token, secretKey);*/
-
         const session = await sessionsCollection.findOne({token});
         if(!session){
             return res.send("Não foi possível localizar a sessão!");

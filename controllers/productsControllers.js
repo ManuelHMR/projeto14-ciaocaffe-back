@@ -24,3 +24,20 @@ export async function getProductId (req, res) {
         res.send(err);
     }
 }
+
+export async function changeStorage (req, res) {
+    const { cart } = req.body;
+    cart.forEach(async (item) => {
+        const {quantity, name} = item;
+        try {
+            const product = await productsCollection.findOne({name});
+            const {stored} = product;
+            const newQuantity = stored - quantity;
+
+            await productsCollection.updateOne({name}, {$set: {stored: newQuantity}});
+            res.sendStatus(200);
+        } catch (error) {
+            res.sendStatus(404);
+        }
+    })
+}
