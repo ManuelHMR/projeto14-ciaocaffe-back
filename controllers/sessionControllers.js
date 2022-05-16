@@ -16,7 +16,8 @@ export async function signIn (req, res) {
         const config = { expiresIn: 60*60*24*7 }
         const token = jwt.sign(data, secretKey, config);
 
-        await sessionsCollection.insertOne(token);
+        await sessionsCollection.insertOne({token});
+
         res.send(token)
     } catch (err){
         res.send(err)
