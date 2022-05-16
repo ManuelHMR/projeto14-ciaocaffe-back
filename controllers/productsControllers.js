@@ -25,20 +25,32 @@ export async function getProductId (req, res) {
     }
 }
 
-export function changeStorage (req, res) {
+export async function changeStorage (req, res) {
     const { cart } = req.body;
-    cart.forEach(async (item) => {
-        const {quantity, name} = item;
-        try {
-            const product = await productsCollection.findOne({name});
-            const {stored} = product;
-            const newQuantity = stored - quantity;
-            if(newQuantity < 0) return res.send('Produto indisponível no estoque');
-            await productsCollection.updateOne({name}, {$set: {stored: newQuantity}});
-            console.log(newQuantity)
-            res.sendStatus(200);
-        } catch (error) {
-            res.sendStatus(404);
+    try {
+        const semEstoque = await productsCollection.findOne({stored: 0});
+        const temNoCarrinho = cart.filter((item) => {
+            return semEstoque.name === item.name;
+        })
+        if(!temNoCarrinho){
+            cart.forEach(async (item) => {
+                const {quantity, name} = item;
+                try {
+                    const product = await productsCollection.findOne({name});
+                    const {stored} = product;
+                    const newQuantity = stored - quantity;
+                    if(newQuantity < 0) return res.send('Produto indisponível no estoque');
+                    await productsCollection.updateOne({name}, {$set: {stored: newQuantity}});
+                    console.log(newQuantity)
+                    res.sendStatus(200);
+                } catch (error) {
+                    res.sendStatus(404);
+                }
+            })
+        } else {
+            res.send('Itens do carrinho não disponíveis');
         }
-    })
+    } catch(e) {
+        res.send('erro');
+    }
 }
